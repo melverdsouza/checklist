@@ -1,0 +1,12 @@
+.title {
+    text-align: center;
+    font-size: 40px;
+}
+
+.full-body {
+    text-align: center;
+    margin-top: 5%;
+}
+#take-input {
+    width: 40%;
+}
