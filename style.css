@@ -10,3 +10,19 @@
 #take-input {
     width: 40%;
 }
+.tasks {
+    width: 40%;
+    margin-left: 30%;
+}
+.task {
+    display: flex;
+    justify-content: center;
+}
+#taskList {
+    width: 40%;
+    margin-left: 26%;
+}
+.task {
+    display: grid;
+    grid-template-columns: 50px 1fr 100px;
+}

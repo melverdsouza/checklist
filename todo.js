@@ -15,17 +15,34 @@ function resetForm() {
         document.getElementById("take-input").value = '';
     }
 }
+function taskWithId() {
+    if(event.key === 'Enter') {
+        let fullTag = document.createElement('li');
+        fullTag.setAttribute('class', 'task');
+        document.getElementById('taskList').appendChild(fullTag);
+    }
+}
 
 function newTask() {
     if(event.key === 'Enter') {
-            let tag = document.createElement('p');
-            tag.innerHTML = taskList[id-1];
-            document.getElementById('task').appendChild(tag)
+        let complete = document.createElement('input')
+        let tag = document.createElement('p');
+        let del = document.createElement('button');
+        complete.setAttribute('type', 'checkbox')
+        complete.setAttribute('class', 'complete')
+        tag.setAttribute('class', 'ele')
+        del.setAttribute('class', 'btn')
+        tag.innerHTML = taskList[id-1];
+        del.innerHTML = 'delete';
+        document.getElementsByClassName('task')[0].appendChild(complete)
+        document.getElementsByClassName('task')[0].appendChild(tag)
+        document.getElementsByClassName('task')[0].appendChild(del)        
     }
 }
 
 function submit() {
     enter();
+    taskWithId()
     newTask();
     resetForm();
 }
