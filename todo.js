@@ -1,7 +1,6 @@
 let inputVal 
 let taskList = [];
 let id 
-id = taskList.length
 function enter() {
     if(event.key === 'Enter') {
         inputVal = document.getElementById("take-input").value;
@@ -18,7 +17,8 @@ function resetForm() {
         document.getElementById("take-input").value = '';
     }
 }
-function taskWithId() {
+
+function createLi() {
     if(event.key === 'Enter') {
         let fullTag = document.createElement('li');
         fullTag.setAttribute('class', 'task');
@@ -40,18 +40,25 @@ function newTask() {
         del.setAttribute('onclick','removeTask(this.value)')
         // del.setAttribute('name', 'id')
         // del.setAttribute('value', )
-        tag.innerHTML = taskList[id]['text'];
+        tag.innerHTML = taskList[taskList.length-1]['text'];
         del.innerHTML = 'delete';
-        document.getElementsByClassName('task')[id].appendChild(complete)
-        document.getElementsByClassName('task')[id].appendChild(tag)
-        document.getElementsByClassName('task')[id].appendChild(del)
+        document.getElementsByClassName('task')[taskList.length-1].appendChild(complete)
+        document.getElementsByClassName('task')[taskList.length-1].appendChild(tag)
+        document.getElementsByClassName('task')[taskList.length-1].appendChild(del)
+    }
+}
+
+function addValues() {
+    for(let i = 0; i < taskList.length; i++) {
+        document.getElementsByClassName('btn')[i].setAttribute('value', i)
     }
 }
 
 function submit() {
     enter();
-    taskWithId()
+    createLi()
     newTask();
+    addValues();
     resetForm();
 }
 
@@ -69,27 +76,10 @@ function checkedbox() {
     }
 }
 
-// function removeTask(value) {
-//     let theTask = taskList[value]
-//     let len = Object.keys(taskList).length
-//     for(let x = 0; x < len; x++){
-//         if(document.getElementsByClassName('ele')[x].innerText == theTask) {
-//             let toDelete = document.getElementsByClassName('ele')[x];
-//             toDelete.parentElement.remove()
-//             delete taskList[value]
-//             break;
-//         }
-//     }
-//     changeId()
-// }
-
-// function changeId() {
-//     let newLen = Object.keys(taskList).length;
-//     let newProp = 1;
-//     for(let x = 0; x < newLen; x++) {
-//         taskList[newProp] = document.getElementsByClassName('ele')[x].innerText
-//         newProp ++
-//     }
-//     id = newProp
-//     delete taskList[newProp]
-// }
+function removeTask(value) {
+    let theTask = taskList[value]
+    let toDelete = document.getElementsByClassName('ele')[Number(value)]
+    toDelete.parentElement.remove()
+    taskList.splice(Number(value),1)
+    addValues()
+}
