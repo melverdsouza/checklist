@@ -8,7 +8,7 @@ function enter() {
         let obj = {}
         taskList.push(obj);
         taskList[taskList.length-1]['text'] = inputVal
-        taskList[taskList.length-1]['active'] = true
+        taskList[taskList.length-1]['complete'] = false
     }
 }
 
@@ -22,6 +22,10 @@ function createLi() {
     if(event.key === 'Enter') {
         let fullTag = document.createElement('li');
         fullTag.setAttribute('class', 'task');
+        fullTag.setAttribute('draggable', 'true')
+        fullTag.setAttribute('ondragstart', 'onDragStart(event)')
+        fullTag.setAttribute('ondragover', 'onDragOver(event)')
+        fullTag.setAttribute('ondrop', 'onDrop(event)')
         document.getElementById('taskList').appendChild(fullTag);
     }
 }
@@ -82,4 +86,29 @@ function removeTask(value) {
     toDelete.parentElement.remove()
     taskList.splice(Number(value),1)
     addValues()
+}
+
+function onDragStart(event) {
+    event
+    .dataTransfer
+    .setData('text/plain',event.target.id);
+}
+
+function onDragOver(event) {
+    event.preventDefault();
+}
+
+function onDrop(event) {
+    const id = event
+        .dataTransfer
+        .getData('text')
+
+    const draggableElement = document.getElementsByClassName(id);
+    const dropzone = event.target;
+
+    dropzone.appendChild(draggableElement);
+
+    event
+        .dataTransfer
+        .clearData();
 }
