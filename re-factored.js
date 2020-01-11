@@ -1,114 +1,119 @@
-let id = 1
-function enter() {
-    if(event.key === 'Enter') {
-        inputVal = document.getElementById("take-input").value;
-        // alert(inputVal)
-        const list = {
-            task: inputVal,
-            complete: false
+todoList = JSON.parse(localStorage.getItem('items'))
+
+let dragID;
+let dragText;
+
+window.onload = function () {
+    if (todoList !== null) {
+      displayList();
+    };
+  };  
+
+// add item to todo list
+function addItem () {
+    // add a new task to the list
+    var item = document.getElementById('todo-item')
+    if(event.key == 'Enter') {
+        // if all the items are deleted instead of null it resets to []
+        if (todoList == null) {
+            todoList = [];
         }
-        window.localStorage.setItem(id, JSON.stringify(list));
-        id++
+        todoList.push([item.value, false])
+        addToLocalStorage();
+        clearChanges();
+        displayList();
+    }
+    if(event.key == 'Enter'){
+        document.getElementById('todo-item').value = ''
     }
 }
 
-function resetForm() {
-    if(event.key === 'Enter') {
-        document.getElementById("take-input").value = '';
-        document.location.reload();
+function addToLocalStorage() {
+    localStorage.setItem('items',JSON.stringify(todoList))
+}
+
+// clears the complete list after a new input is made
+function clearChanges() {
+    var ul = document.getElementById('todo');
+
+    while(ul.firstChild) {
+        ul.removeChild(ul.firstChild)
     }
 }
 
-function submit() {
-    enter()
-    resetForm();
-    
+// creates a separate li for each task
+function displayList() {
+    // var array = JSON.parse('items',localStorage.getItem('items'))
+    var section = document.getElementById('todo')
+    for(let i = 0; i < todoList.length; i++) {
+        var division = document.createElement('li')
+        division.id = i;
+        division.draggable = 'true';
+        division.className = 'list-item';
+        division.addEventListener = ('dragstart', dragStart);
+        division.addEventListener = ('dragover', dragOver);
+        division.addEventListener = ('drop', dragDrop);
+        var checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.addEventListener('click',checkItem);
+        checkbox.checked = todoList[i][1];
+        let todoText = document.createElement('span');
+        todoText.innerText = todoList[i][0];
+        let cancel = document.createElement('div')
+        cancel.className = 'class-img';
+        cancel.addEventListener('click', removeItem);
+        if(todoList[i][1]) {
+            todoText.style.textDecoration = 'line-through';
+            todoText.style.color = 'gray';
+        }
+        division.appendChild(checkbox);
+        division.appendChild(todoText);
+        division.appendChild(cancel);
+        section.appendChild(division);
+    }
 }
 
-// function createLi() {
-//     if(event.key === 'Enter') {
-//         let fullTag = document.createElement('li');
-//         fullTag.setAttribute('class', 'task');
-//         fullTag.setAttribute('draggable', 'true')
-//         fullTag.setAttribute('ondragstart', 'onDragStart(event)')
-//         fullTag.setAttribute('ondragover', 'onDragOver(event)')
-//         fullTag.setAttribute('ondrop', 'onDrop(event)')
-//         document.getElementById('taskList').appendChild(fullTag);
-//     }
-// }
+function removeItem() {
+    this.parentNode.parentNode.removeChild(this.parentNode)
+    todoList.splice(this.parentNode.id, 1)
+    addToLocalStorage();
+}
 
-// function newTask() {
-//     if(event.key === 'Enter') {
-//         let complete = document.createElement('input')
-//         let tag = document.createElement('p');
-//         let del = document.createElement('button');
-//         complete.setAttribute('type', 'checkbox')
-//         complete.setAttribute('class', 'complete')
-//         complete.setAttribute('onclick','checkedbox()')
-//         // complete.setAttribute('onclick','uncheckedbox()')
-//         tag.setAttribute('class', 'ele')
-//         del.setAttribute('class', 'btn')
-//         del.setAttribute('onclick','removeTask(this.value)')
-//         // del.setAttribute('name', 'id')
-//         // del.setAttribute('value', )
-//         tag.innerHTML = taskList[taskList.length-1]['text'];
-//         del.innerHTML = 'delete';
-//         document.getElementsByClassName('task')[taskList.length-1].appendChild(complete)
-//         document.getElementsByClassName('task')[taskList.length-1].appendChild(tag)
-//         document.getElementsByClassName('task')[taskList.length-1].appendChild(del)
-//     }
-// }
-
-// function addValues() {
-//     for(let i = 0; i < taskList.length; i++) {
-//         document.getElementsByClassName('btn')[i].setAttribute('value', i)
-//     }
-// }
-
-function createTasks() {
-    for (var i = 1; i <= localStorage.length; i++){
-        // do something with localStorage.getItem(localStorage.key(i));
-        function createLi() {
-            if(event.key === 'Enter') {
-                let fullTag = document.createElement('li');
-                fullTag.setAttribute('class', 'task');
-                fullTag.setAttribute('draggable', 'true')
-                fullTag.setAttribute('ondragstart', 'onDragStart(event)')
-                fullTag.setAttribute('ondragover', 'onDragOver(event)')
-                fullTag.setAttribute('ondrop', 'onDrop(event)')
-                document.getElementById('taskList').appendChild(fullTag);
-            }
-        }
-        
-        function newTask() {
-            if(event.key === 'Enter') {
-                
-                let complete = document.createElement('input')
-                let tag = document.createElement('p');
-                let del = document.createElement('button');
-                complete.setAttribute('type', 'checkbox')
-                complete.setAttribute('class', 'complete')
-                complete.setAttribute('onclick','checkedbox()')
-                // complete.setAttribute('onclick','uncheckedbox()')
-                tag.setAttribute('class', 'ele')
-                del.setAttribute('class', 'btn')
-                del.setAttribute('onclick','removeTask(this.value)')
-                // del.setAttribute('name', 'id')
-                // del.setAttribute('value', )
-                tag.innerHTML = JSON.parse(window.localStorage.getItem(i))['task'];
-                del.innerHTML = 'delete';
-                document.getElementsByClassName('task')[i-1].appendChild(complete)
-                document.getElementsByClassName('task')[i-1].appendChild(tag)
-                document.getElementsByClassName('task')[i-1].appendChild(del)
-            }
-        }
-        
-        // function addValues() {
-        //     for(let i = 0; i < taskList.length; i++) {
-        //         document.getElementsByClassName('btn')[i].setAttribute('value', i)
-        //     }
-        // }
-        createLi();
-        newTask(); 
+function checkItem() {
+    if(this.checked) {
+        todoList[this.parentNode.id][1] = true
+        addToLocalStorage();
+        clearChanges();
+        displayList();
     }
+    else {
+        todoList[this.parentNode.id][1] = false;
+        addToLocalStorage();
+        clearChanges();
+        displayList();
+      }
+}
+
+function dragStart(e) {
+  dragID = this.id;
+  dragText = e.target.textContent;
+}
+
+
+function dragOver(e) {
+  e.preventDefault();
+  e.stopPropagation();
+}
+
+
+function dragDrop(e) {
+  todoList[this.id][0] = dragText;
+  todoList[dragID][0] = e.target.textContent;
+  var isChecked = todoList[this.id][1];
+  todoList[this.id][1] = todoList[dragID][1];
+  todoList[dragID][1] = isChecked;
+
+  addToLocalStorage();
+  clearChanges();
+  displayList();
 }

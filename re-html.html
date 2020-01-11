@@ -3,23 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <script defer src="re-factored.js"></script>
-    <title>To do list</title>
+    <link rel="stylesheet" href="re-css.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="re-factored.js"></script>
+    <title>todo</title>
 </head>
 <body>
-    <div class="title">todos</div>    
-    <div class="full-body">
-        <div class="full-input">
-            <input type="text" placeholder="what needs to be done?" id="take-input" onkeydown="submit()">
-        </div>
-        <ul id="taskList">
-            <!-- <li class="task">
-                <input type="checkbox" class="complete" onclick="checkedbox()" >
-                <p class="ele">check</p>
-                <button class="btn" ></button>
-            </li> -->
-        </ul>
-    </div>
+    <section class="todo-section">
+        <h1> todo</h1>
+        <input type="text" id="todo-item"  onkeydown="addItem()">
+        <ul id="todo"></ul>
+    </section>
 </body>
 </html>
